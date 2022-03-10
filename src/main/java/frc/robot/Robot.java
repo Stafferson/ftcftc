@@ -18,9 +18,13 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 public class Robot extends TimedRobot {
 
+  private CANSparkMax test = new CANSparkMax(11, MotorType.kBrushless);
+  private CANSparkMax test1 = new CANSparkMax(12, MotorType.kBrushless);
+  private CANSparkMax up = new CANSparkMax(10, MotorType.kBrushless);
+  private CANSparkMax intake = new CANSparkMax(9, MotorType.kBrushless);
+  
   //private static final String SPI = null;
   private CANSparkMax rightFront = new CANSparkMax(3, MotorType.kBrushless);
-  //private Spark rightFront = new Spark(15);
   private CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
   private CANSparkMax leftRear = new CANSparkMax(4, MotorType.kBrushless);
   private CANSparkMax rightRear = new CANSparkMax(1, MotorType.kBrushless);
@@ -34,12 +38,12 @@ public class Robot extends TimedRobot {
   private int right_trigger = 3;
   private int left_trigger = 2;
 
-  private double k = 0.6;
+  private double k = 1;
 
-  MecanumDrive myRobot = new MecanumDrive(leftRear, leftFront, rightFront, rightRear);
+  //MecanumDrive myRobot = new MecanumDrive(leftRear, leftFront, rightFront, rightRear);
   Joystick gamepad1 = new Joystick(0);
 
-  AHRS ahrs = new AHRS(SPI.Port.kMXP);
+  //AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -65,6 +69,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    test.setInverted(true);
+    test1.setInverted(true);
     //leftFront.setInverted(true);
     //leftRear.setInverted(true);
   }
@@ -73,16 +79,16 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     double r = Math.hypot(gamepad1.getRawAxis(left_x), gamepad1.getRawAxis(left_y));
     double robotAngle = Math.atan2(gamepad1.getRawAxis(left_y), gamepad1.getRawAxis(left_x)) - Math.PI / 4;
-    double rightX = -1 * gamepad1.getRawAxis(right_x);
+    double rightX = gamepad1.getRawAxis(right_x);
     final double v1 = r * Math.cos(robotAngle) + rightX;
     final double v2 = r * Math.sin(robotAngle) - rightX;
     final double v3 = r * Math.sin(robotAngle) + rightX;
     final double v4 = r * Math.cos(robotAngle) - rightX;
 
     leftFront.set(k * v3);
-    rightFront.set(k * v2);
+    rightFront.set(-k * v2);
     leftRear.set(k * v1);
-    rightRear.set(k * v4);
+    rightRear.set(-k * v4);
 
     /*myRobot.setSafetyEnabled(true);
     if (gamepad1.getRawButton(1)) {
@@ -98,6 +104,15 @@ public class Robot extends TimedRobot {
     leftRear.set(gamepad1.getRawAxis(left_x));
     rightFront.set(gamepad1.getRawAxis(right_y));
     rightRear.set(gamepad1.getRawAxis(right_x));*/
+    test.set(0.4 * gamepad1.getRawAxis(left_trigger));
+    test1.set(0.8 * gamepad1.getRawAxis(left_trigger));
+    up.set(k * gamepad1.getRawAxis(right_y));
+    intake.set(k * gamepad1.getRawAxis(right_trigger));
+
+    /*leftFront.set(k * gamepad1.getRawAxis(left_y));
+    rightFront.set(k * gamepad1.getRawAxis(left_y));
+    leftRear.set(k * gamepad1.getRawAxis(left_y));
+    rightRear.set(k * gamepad1.getRawAxis(left_y));*/
   }
 
   @Override
