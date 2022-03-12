@@ -40,10 +40,10 @@ public class Robot extends TimedRobot {
 
   private double k = 1;
 
-  //MecanumDrive myRobot = new MecanumDrive(leftRear, leftFront, rightFront, rightRear);
+  MecanumDrive myRobot = new MecanumDrive(leftRear, leftFront, rightFront, rightRear);
   Joystick gamepad1 = new Joystick(0);
 
-  //AHRS ahrs = new AHRS(SPI.Port.kMXP);
+  AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     test.setInverted(true);
     test1.setInverted(true);
-    //leftFront.setInverted(true);
+    //rightRear.setInverted(true);
     //leftRear.setInverted(true);
   }
 
@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     test.set(0.4 * gamepad1.getRawAxis(left_trigger));
     test1.set(0.8 * gamepad1.getRawAxis(left_trigger));
     up.set(k * gamepad1.getRawAxis(right_y));
-    intake.set(k * gamepad1.getRawAxis(right_trigger));
+    intake.set(-k * gamepad1.getRawAxis(right_trigger));
 
     /*leftFront.set(k * gamepad1.getRawAxis(left_y));
     rightFront.set(k * gamepad1.getRawAxis(left_y));
